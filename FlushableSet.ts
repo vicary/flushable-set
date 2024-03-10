@@ -1,3 +1,4 @@
+/** Invoked when `.flush()` is called manually or via maxSize. */
 export type FlushCallback<T> = (
   /** Reference for normal functions */
   this: FlushableSet<T>,
@@ -5,6 +6,7 @@ export type FlushCallback<T> = (
   that: FlushableSet<T>
 ) => Promise<void> | void;
 
+/** Constructor options for FlushableSet. */
 export type FlushableSetOptions<T> = {
   /** Maximum size allowed before an auto-flush is triggered. */
   maxSize?: number;
@@ -40,6 +42,7 @@ export class FlushableSet<
 > extends Set<T> {
   #maxSize: number;
 
+  /** Maximum size allowed before an auto-flush is triggered. */
   get maxSize(): number {
     return this.#maxSize;
   }
@@ -48,6 +51,10 @@ export class FlushableSet<
 
   #flushPromise?: Promise<void>;
 
+  /**
+   * A reference to the current flush action if the specified onFlush callback
+   * is asynchronous.
+   */
   get flushPromise(): Promise<void> | undefined {
     return this.#flushPromise;
   }
@@ -83,6 +90,15 @@ export class FlushableSet<
     return this;
   }
 
+  /**
+   * Appends a new element with a specified value to the end of the Set.
+   *
+   * If the addition triggers a flush, this method waits for the flush to
+   * finish.
+   *
+   * If there is an ongoing flush, this method waits for it to finish before
+   * adding the value.
+   */
   async addAsync(value: T): Promise<this> {
     await this.#flushPromise;
 
