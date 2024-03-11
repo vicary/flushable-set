@@ -3,22 +3,6 @@
 A drop-in replacement of the native Set with an optional max size and a flush
 callback.
 
-## Installation
-
-```bash
-# deno
-deno add @vicary/flushable-set
-
-# npm
-npx jsr add @vicary/flushable-set
-
-# yarn
-yarn dlx jsr add @vicary/flushable-set
-
-# pnpm
-pnpm dlx jsr add @vicary/flushable-set
-```
-
 ## Usage
 
 ```typescript
