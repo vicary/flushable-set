@@ -40,9 +40,13 @@ export class FlushableSet<
   // deno-lint-ignore no-explicit-any
   T = any
 > extends Set<T> {
-  #maxSize: number;
+  #maxSize = Infinity;
 
-  /** Maximum size allowed before an auto-flush is triggered. */
+  /**
+   * Maximum size allowed before an auto-flush is triggered.
+   *
+   * @default Infinity
+   */
   get maxSize(): number {
     return this.#maxSize;
   }
