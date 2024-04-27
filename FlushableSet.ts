@@ -3,7 +3,7 @@ export type FlushCallback<T> = (
   /** Reference for normal functions */
   this: FlushableSet<T>,
   /** Reference for arrow functions */
-  that: FlushableSet<T>
+  that: FlushableSet<T>,
 ) => Promise<void> | void;
 
 /** Constructor options for FlushableSet. */
@@ -38,7 +38,7 @@ export type FlushableSetOptions<T> = {
  */
 export class FlushableSet<
   // deno-lint-ignore no-explicit-any
-  T = any
+  T = any,
 > extends Set<T> {
   #maxSize = Infinity;
 
@@ -65,7 +65,7 @@ export class FlushableSet<
 
   constructor(
     iterable?: Iterable<T> | null,
-    { maxSize = Infinity, onFlush }: FlushableSetOptions<T> = {}
+    { maxSize = Infinity, onFlush }: FlushableSetOptions<T> = {},
   ) {
     if (maxSize < 1) {
       throw new Error(`maxSize must be greater than 0.`);
@@ -81,7 +81,7 @@ export class FlushableSet<
   add(value: T): this {
     if (this.#flushPromise) {
       throw new Error(
-        `An asynchronous flush is in progress, please wait for it to finish before adding more values.`
+        `An asynchronous flush is in progress, please wait for it to finish before adding more values.`,
       );
     }
 
