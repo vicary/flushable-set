@@ -44,3 +44,20 @@ for await (const row of dataStream) {
 // Flush the remaining items
 await chunk.flush();
 ```
+
+## Contributing
+
+If you find a bug or would like to suggest a new feature, please open an issue
+or submit a pull request on GitHub.
+
+## License
+
+FlushableSet is licensed under the MIT License. See the LICENSE file for more
+information.
+
+## Funding
+
+If you find this project useful, please consider supporting it by donating to
+the author.
+
+[![Donate](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub)](https://github.com/sponsors/vicary)

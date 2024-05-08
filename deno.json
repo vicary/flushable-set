@@ -1,8 +1,10 @@
 {
   "name": "@vicary/flushable-set",
   "description": "A drop-in replacement of the native Set with an optional max size and a flush callback.",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "exports": "./mod.ts",
+  "lock": false,
+  "nodeModulesDir": false,
   "imports": {
     "@deno/dnt": "jsr:@deno/dnt@^0.41.1"
   }
