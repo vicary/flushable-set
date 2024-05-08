@@ -1,11 +1,11 @@
-// Bundle src/FlushableSet.ts into both ESM and CJS format.
-import { build, emptyDir } from "https://deno.land/x/dnt/mod.ts";
+// Bundle src/mod.ts into both ESM and CJS format.
+import { build, emptyDir } from "@deno/dnt";
 import pkg from "./deno.json" with { type: "json" };
 
 await emptyDir("./dnt");
 
 await build({
-  entryPoints: ["./FlushableSet.ts"],
+  entryPoints: ["./mod.ts"],
   outDir: "./dnt",
   shims: {
     deno: false,
@@ -13,8 +13,7 @@ await build({
   package: {
     name: "flushable-set",
     version: pkg.version,
-    description:
-      "A drop-in replacement of the native Set with an optional max size and a flush callback.",
+    description: pkg.description,
     license: "MIT",
     repository: {
       type: "git",
