@@ -1,8 +1,8 @@
 // Bundle src/mod.ts into both ESM and CJS format.
-import { build, emptyDir } from "@deno/dnt";
+import { build } from "@deno/dnt";
 import pkg from "./deno.json" with { type: "json" };
 
-await emptyDir("./dnt");
+await Deno.remove("./dnt", { recursive: true }).catch(() => {});
 
 await build({
   entryPoints: ["./mod.ts"],
@@ -40,9 +40,10 @@ await build({
       url: "https://github.com/sponsors/vicary",
     },
   },
-  postBuild() {
+  async postBuild() {
     // steps to run after building and before running the tests
-    Deno.copyFileSync("LICENSE", "dnt/LICENSE");
-    Deno.copyFileSync("README.md", "dnt/README.md");
+    await Deno.copyFile("LICENSE", "dnt/LICENSE");
+    await Deno.copyFile("README.md", "dnt/README.md");
   },
+  typeCheck: "both",
 });
