@@ -78,7 +78,7 @@ export class FlushableSet<
     this.#onFlush = onFlush;
   }
 
-  add(value: T): this {
+  override add(value: T): this {
     if (this.#flushPromise) {
       throw new Error(
         `An asynchronous flush is in progress, please wait for it to finish before adding more values.`,
@@ -89,7 +89,9 @@ export class FlushableSet<
       this.flush();
     }
 
-    super.add(value);
+    this.flushPromise
+      ?.finally(() => super.add(value)) ??
+      super.add(value);
 
     return this;
   }
