@@ -79,19 +79,19 @@ export class FlushableSet<
   }
 
   override add(value: T): this {
-    if (this.#flushPromise) {
-      throw new Error(
-        `An asynchronous flush is in progress, please wait for it to finish before adding more values.`,
-      );
+    if (
+      this.size >= this.#maxSize &&
+      this.flush() instanceof Promise
+    ) {
+      // Has to chain this one to avoid dangling promises.
+      this.#flushPromise = this.#flushPromise!.then(() => {
+        super.add(value);
+      });
+
+      return this;
     }
 
-    if (this.size >= this.#maxSize) {
-      this.flush();
-    }
-
-    this.flushPromise
-      ?.finally(() => super.add(value)) ??
-      super.add(value);
+    super.add(value);
 
     return this;
   }
@@ -108,9 +108,11 @@ export class FlushableSet<
   async addAsync(value: T): Promise<this> {
     await this.#flushPromise;
 
-    this.add(value);
+    if (this.size >= this.#maxSize) {
+      await this.flush();
+    }
 
-    await this.#flushPromise;
+    super.add(value);
 
     return this;
   }
@@ -119,17 +121,20 @@ export class FlushableSet<
    * Triggers the onFlush callback if specified, clears the set afterwards.
    */
   flush(): Promise<void> | void {
+    if (this.#flushPromise) {
+      throw new Error(`An asynchronous flush is already in progress.`);
+    }
+
     const res = this.#onFlush?.call(this, this);
 
     if (res instanceof Promise) {
-      this.#flushPromise = res.finally(() => {
+      return this.#flushPromise = res.finally(() => {
         this.clear();
         this.#flushPromise = undefined;
       });
-
+    } else {
+      this.clear();
       return res;
     }
-
-    this.clear();
   }
 }
