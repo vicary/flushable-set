@@ -7,9 +7,8 @@ await Deno.remove("./dnt", { recursive: true }).catch(() => {});
 await build({
   entryPoints: ["./mod.ts"],
   outDir: "./dnt",
-  shims: {
-    deno: false,
-  },
+  shims: { deno: false },
+  test: false,
   package: {
     name: "flushable-set",
     version: pkg.version,
